@@ -23,6 +23,24 @@ var displayRepos = function (repos,searchTerm){
     console.log(searchTerm);
     reposContainerEl.textContent = "";
     repoSearchTermEl.textContent = searchTerm;
+
+    for (var i =0; i<repos.length; i++ ){
+        // format the data into readable format on page
+        var repoName = repos[i].owner.login + "/" + repos[i].name;
+
+        // containter for each repo line 
+        var repoEl = document.createElement("div");
+        repoEl.classList = "list-item flex-row justify-space-between align-center";
+        
+        var titleEl = document.createElement("span");
+        titleEl.textContent= repoName;
+
+        repoEl.appendChild(titleEl);
+
+        reposContainerEl.appendChild(repoEl);
+    }
+
+
 };
 
 
