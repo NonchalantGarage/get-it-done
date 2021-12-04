@@ -10,9 +10,13 @@ var getUserRepos = function(user){
 
     // Make a request to the url
     fetch(apiUrl).then(function(response){
+        if (response.ok){
         response.json().then(function(data){
             displayRepos(data, user);
-        });
+             });
+        } else {
+            alert("Error: Github user not found");
+        }
     });
 };
 
@@ -26,6 +30,11 @@ var displayRepos = function (repos,searchTerm){
 
     for (var i =0; i<repos.length; i++ ){
         // format the data into readable format on page
+        if (repos[i].length === 0){
+            reposContainerEl.textContent = "No repositories found.";
+            return;
+        }
+
         var repoName = repos[i].owner.login + "/" + repos[i].name;
 
         // containter for each repo line 
@@ -37,15 +46,28 @@ var displayRepos = function (repos,searchTerm){
 
         repoEl.appendChild(titleEl);
 
+        
+
         reposContainerEl.appendChild(repoEl);
+
+        // create a status element
+        var statusEl = document.createElement("span");
+        statusEl.classList = "flex-row align-center";
+
+        // check if current repo has issues or not
+        if (repos[i].open_issues_count > 0) {
+             statusEl.innerHTML =
+            "<i class='fas fa-times status-icon icon-danger'></i>" + repos[i].open_issues_count + " issue(s)";
+        } else {
+            statusEl.innerHTML = "<i class='fas fa-check-square status-icon icon-success'></i>";
+        }
+
+        // append to container
+        repoEl.appendChild(statusEl);
     }
 
 
 };
-
-
-
-
 
 
 var formSubmitHandler = function(event){
