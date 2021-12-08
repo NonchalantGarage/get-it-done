@@ -2,6 +2,23 @@ var userFormEL = document.querySelector("#user-form");
 var nameInputEl = document.querySelector("#username");
 var repoSearchTermEl = document.querySelector("#repo-search-term");
 var reposContainerEl = document.querySelector("#repos-container");
+var languageButtonsEl = document.querySelector("#launguage-buttons");
+
+var getFeaturedRepos = function(language){
+    var apiUrl = "https://api.github.com/search/repositories?q=" + language + "is:featured&sort=help-wanted-issues";
+
+    fetch(apiUrl)
+    .then(function(response){
+    if (response.ok) {
+       response.json().then(function(data){
+        displayRepos(data.items, language);
+        });
+    } else {
+        alert("Error: Github user not found");
+        }
+    });
+}
+
 
 
 var getUserRepos = function(user){
@@ -85,6 +102,21 @@ if (username){
     console.log(event);
 };
 
+
+
+var buttonClickHandler = function(event){
+    var language = event.target.getAttribute("data-language");
+    event.preventDefault();
+
+    if(language){
+        getFeaturedRepos(language);
+
+        // clear old content
+        reposContainerEl.textContent ="";
+    }
+    console.log(language)
+}
+
 // This function will accept both the array of repository data and the term we searched for as parameters.
 
 
@@ -96,7 +128,8 @@ if (username){
 // });
 
 
-userFormEL.addEventListener("submit", formSubmitHandler);   
+userFormEL.addEventListener("submit", formSubmitHandler);  
+languageButtonsEl.addEventListener("click", buttonClickHandler); 
 
 
 
